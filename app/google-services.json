@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "992127324957",
+    "firebase_url": "https://realtimeloction2.firebaseio.com",
+    "project_id": "realtimeloction2",
+    "storage_bucket": "realtimeloction2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992127324957:android:93af92a998e9f242",
+        "android_client_info": {
+          "package_name": "com.zainco.realtimeloction2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992127324957-s9hpr1hnvlbrk714a0cgda32kpeeoqtt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zainco.realtimeloction2",
+            "certificate_hash": "eb517143853645d02b0e2349a46ddf2d3cc152e8"
+          }
+        },
+        {
+          "client_id": "992127324957-li4iabqsc1iodc5ratvnhbp085okib0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjmJOCI-Y2yoqqk529NLTMhf8LcieAqIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992127324957-li4iabqsc1iodc5ratvnhbp085okib0o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
