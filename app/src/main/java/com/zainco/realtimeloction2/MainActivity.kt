@@ -29,7 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var firebaseUser: FirebaseUser
     lateinit var providers: List<AuthUI.IdpConfig>
-    val user_information: DatabaseReference = FirebaseDatabase.getInstance().getReference(Common.USER_INFORMATION)
+    val user_information: DatabaseReference = FirebaseDatabase.getInstance()
+        .getReference(Common.USER_INFORMATION)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                  firebaseUser = FirebaseAuth.getInstance().currentUser!!
                 user_information.orderByKey()
-                    .equalTo(firebaseUser?.uid)
+                    .equalTo(firebaseUser.uid)
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onCancelled(p0: DatabaseError) {
                             Toast.makeText(this@MainActivity, "onCancelled", Toast.LENGTH_SHORT).show()
@@ -77,19 +78,19 @@ class MainActivity : AppCompatActivity() {
 
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             if (dataSnapshot.value == null) {
-                                if (!dataSnapshot.child(firebaseUser!!.uid).exists()) {
+                                if (!dataSnapshot.child(firebaseUser.uid).exists()) {
                                     Common.loggedUser = User(
-                                        firebaseUser?.email,
-                                        firebaseUser?.uid
+                                        firebaseUser.email!!,
+                                        firebaseUser.uid
                                     )
-                                    user_information.child(Common.loggedUser!!.uid).setValue(
+                                    user_information.child(Common.loggedUser.uid).setValue(
                                         Common.loggedUser
                                     )
                                 }
                             } else {
-                                Common.loggedUser = dataSnapshot.child(firebaseUser!!.uid).getValue(User::class.java)!!
+                                Common.loggedUser = dataSnapshot.child(firebaseUser.uid).getValue(User::class.java)!!
                             }
-                            Paper.book().write(Common.USER_UID_SAVE_KEY, Common.loggedUser?.uid)
+                            Paper.book().write(Common.USER_UID_SAVE_KEY, Common.loggedUser.uid)
                             updateToken()
                             setUpUI()
                         }
