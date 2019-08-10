@@ -3,6 +3,7 @@ package com.zainco.realtimeloction2
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -11,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.zainco.realtimeloction2.utils.Common
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,6 +37,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+
+        val headerView = navView.getHeaderView(0)
+        val textLogged = headerView.findViewById<TextView>(R.id.txt_logged_email)
+        textLogged.text = Common.loggedUser.email
     }
 
     override fun onBackPressed() {
@@ -55,7 +61,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(Intent(this, AllPeopleActivity::class.java))
             }
             R.id.nav_add_people -> {
-
+                startActivity(Intent(this, FriendRequestActivity::class.java))
             }
             R.id.nav_sign_out -> {
 

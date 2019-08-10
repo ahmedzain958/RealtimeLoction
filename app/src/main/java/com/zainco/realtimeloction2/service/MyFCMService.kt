@@ -8,10 +8,12 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.zainco.realtimeloction2.R
 import com.zainco.realtimeloction2.TestPendingIntentActivity
+import com.zainco.realtimeloction2.model.User
 import com.zainco.realtimeloction2.utils.Common
 import com.zainco.realtimeloction2.utils.NotificationHelper
 import com.zainco.realtimeloction2.utils.NotificationHelper.Companion.EDMT_CHANNEL_ID
@@ -26,13 +28,25 @@ class MyFCMService : FirebaseMessagingService() {
             } else {
                 sendNotification(message)
             }
+
+            addRequestToUserInformation(message.data)
         }
+    }
+
+    private fun addRequestToUserInformation(data: Map<String, String>) {
+        val friendRequest = FirebaseDatabase.getInstance().getReference(Common.USER_INFORMATION)
+            .child(data[Common.TO_UID]!!)
+            .child(Common.FRIEND_REQUEST)
+
+        val user = User( data[Common.FROM_EMAIL],data[Common.FROM_UID])
+        friendRequest.child(user.uid)
+            .setValue(user)
     }
 
     private fun sendNotification(message: RemoteMessage) {
         val data: MutableMap<String, String> = message.data
         val title = "Friend Requests"
-        val content = "New Friend Request from " + data[Common.FROM_NAME]
+        val content = "New Friend Request from " + data[Common.FROM_EMAIL]
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, EDMT_CHANNEL_ID)
             .setSmallIcon(R.drawable.abc_ratingbar_small_material)
             .setContentTitle(title)
@@ -47,7 +61,7 @@ class MyFCMService : FirebaseMessagingService() {
     private fun sendNotificationWithChannel(message: RemoteMessage) {
         val data: MutableMap<String, String> = message.data
         val title = "Friend Requests"
-        val content = "New Friend Request from " + data[Common.FROM_NAME]
+        val content = "New Friend Request from " + data[Common.FROM_EMAIL]
 
         val intent = Intent(this, TestPendingIntentActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -59,7 +59,6 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
         material_search_bar.addTextChangeListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 val x = 0
-
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

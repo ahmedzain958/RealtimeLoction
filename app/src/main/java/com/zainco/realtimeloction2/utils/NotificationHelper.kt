@@ -25,8 +25,7 @@ class NotificationHelper constructor(context: Context) : ContextWrapper(context)
         const val EDMT_CHANNEL_NAME = "realtimeloction2"
     }
 
-    private val notificationManager: NotificationManager =
-        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private lateinit var  notificationManager: NotificationManager
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createChannel() {
@@ -42,6 +41,8 @@ class NotificationHelper constructor(context: Context) : ContextWrapper(context)
         notificationChannel.setShowBadge(true)
         notificationChannel.setSound(uri, null)
         notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        notificationManager  =
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
