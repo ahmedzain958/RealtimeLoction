@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.mancj.materialsearchbar.MaterialSearchBar
 import com.zainco.realtimeloction2.listeners.IFirebaseLoadDone
 import com.zainco.realtimeloction2.model.User
@@ -87,9 +90,33 @@ class FriendRequestActivity : AppCompatActivity(), IFirebaseLoadDone {
     }
 
     private fun loadSearchData() {
-        val query = FirebaseDatabase.getInstance().reference.child(Common.USER_INFORMATION)
-            .child(Common.loggedUser.uid)
+        val lstUserEmail = ArrayList<String>()
+        val userList = FirebaseDatabase.getInstance().reference.child(Common.USER_INFORMATION)
+            .child(Common.loggedUser!!.uid)
             .child(Common.FRIEND_REQUEST)
+        userList.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                iFirebaseLoadDone.onFirebaseLoadFalied(databaseError.message)
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach { userSnapshot ->
+                    val user = userSnapshot.getValue(User::class.java)
+                    lstUserEmail.add(user!!.email)
+                }
+                iFirebaseLoadDone.onFirebaseLoadUsernameDone(lstEmail = lstUserEmail)
+            }
+
+        })
+
+    }
+
+    private fun startSearch(text: String) {
+        val query = FirebaseDatabase.getInstance().reference.child(Common.USER_INFORMATION)
+            .child(Common.loggedUser!!.uid)
+            .child(Common.FRIEND_REQUEST)
+            .orderByChild("email")
+            .startAt(text)
 
         val options = FirebaseRecyclerOptions.Builder<User>()
             .setQuery(query, User::class.java)
@@ -116,16 +143,12 @@ class FriendRequestActivity : AppCompatActivity(), IFirebaseLoadDone {
         }
         searchAdapter?.startListening()
         recycler_all_people.adapter = searchAdapter
-    }
-
-    private fun startSearch(text: String) {
-
 
     }
 
     private fun loadfriendRequestList() {
         val query = FirebaseDatabase.getInstance().reference.child(Common.USER_INFORMATION)
-            .child(Common.loggedUser.uid)
+            .child(Common.loggedUser!!.uid)
             .child(Common.FRIEND_REQUEST)
 
         val options = FirebaseRecyclerOptions.Builder<User>()
@@ -165,7 +188,7 @@ class FriendRequestActivity : AppCompatActivity(), IFirebaseLoadDone {
 
     private fun addToAcceptList(model: User) {
         FirebaseDatabase.getInstance().getReference(Common.USER_INFORMATION)
-            .child(Common.loggedUser.uid!!)
+            .child(Common.loggedUser!!.uid!!)
             .child(Common.ACCEPT_LIST)
             .child(model.uid)
             .setValue(model)
@@ -173,7 +196,7 @@ class FriendRequestActivity : AppCompatActivity(), IFirebaseLoadDone {
 
     private fun deleteFriendRequest(model: User, isShownMessage: Boolean) {
         val friendrequest = FirebaseDatabase.getInstance().getReference(Common.USER_INFORMATION)
-            .child(Common.loggedUser.uid)
+            .child(Common.loggedUser!!.uid)
             .child(Common.FRIEND_REQUEST)
 
         friendrequest.child(model.uid)

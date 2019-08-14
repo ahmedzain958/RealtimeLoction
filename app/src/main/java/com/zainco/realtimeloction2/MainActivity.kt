@@ -83,14 +83,14 @@ class MainActivity : AppCompatActivity() {
                                         firebaseUser.email!!,
                                         firebaseUser.uid
                                     )
-                                    user_information.child(Common.loggedUser.uid).setValue(
+                                    user_information.child(Common.loggedUser!!.uid).setValue(
                                         Common.loggedUser
                                     )
                                 }
                             } else {
                                 Common.loggedUser = dataSnapshot.child(firebaseUser.uid).getValue(User::class.java)!!
                             }
-                            Paper.book().write(Common.USER_UID_SAVE_KEY, Common.loggedUser.uid)
+                            Paper.book().write(Common.USER_UID_SAVE_KEY, Common.loggedUser!!.uid)
                             updateToken()
                             setUpUI()
                         }

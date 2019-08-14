@@ -40,6 +40,7 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
     val compositeDisposable = CompositeDisposable()
     lateinit var ifcmService: IFCMService
     override fun onFirebaseLoadUsernameDone(lstEmail: List<String>) {
+        suggestList = lstEmail
         material_search_bar.lastSuggestions = lstEmail
     }
 
@@ -50,7 +51,7 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
     var adapter: FirebaseRecyclerAdapter<User, UserViewHolder>? = null
     var searchAdapter: FirebaseRecyclerAdapter<User, UserViewHolder>? = null
     lateinit var iFirebaseLoadDone: IFirebaseLoadDone
-    val suggestList = listOf<String>()
+    var suggestList = listOf<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_people)
@@ -82,6 +83,7 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
             }
 
             override fun onSearchStateChanged(enabled: Boolean) {
+                //close search return default
                 if (!enabled) {
                     adapter?.let {
                         recycler_all_people.adapter = it
@@ -170,7 +172,7 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
 
     fun startSearch(text_search: String) {
         val query = FirebaseDatabase.getInstance().reference.child(Common.USER_INFORMATION)
-            .orderByChild("name")
+            .orderByChild("email")
             .startAt(text_search)
         val options = FirebaseRecyclerOptions.Builder<User>()
             .setQuery(query, User::class.java)
@@ -212,7 +214,7 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
         }
         mDialogBuilder.setPositiveButton("SEND") { dialogInterface: DialogInterface, p1 ->
             val acceptList = FirebaseDatabase.getInstance().getReference(Common.USER_INFORMATION)
-                .child(Common.loggedUser.uid!!)
+                .child(Common.loggedUser!!.uid!!)
                 .child(Common.ACCEPT_LIST)
 
             acceptList.orderByKey().equalTo(model.uid)
@@ -257,8 +259,8 @@ class AllPeopleActivity : AppCompatActivity(), IFirebaseLoadDone {
                         ).show()
                     } else {
                         val dataSend: HashMap<String, String> = HashMap()
-                        dataSend[Common.FROM_UID] = Common.loggedUser.uid!!
-                        dataSend[Common.FROM_EMAIL] = Common.loggedUser.email!!
+                        dataSend[Common.FROM_UID] = Common.loggedUser!!.uid!!
+                        dataSend[Common.FROM_EMAIL] = Common.loggedUser!!.email!!
                         dataSend[Common.TO_UID] = model.uid!!
                         dataSend[Common.TO_EMAIL] = model.email!!
                         val to = dataSnapShot.child(model.uid!!).getValue(String::class.java)!!
